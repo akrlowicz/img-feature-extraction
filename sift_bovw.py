@@ -17,6 +17,8 @@ class SIFT():
         for im in images:
             image8bit = cv2.normalize(im, None, 0, 255, cv2.NORM_MINMAX).astype('uint8')
             kp, des = self.sift.detectAndCompute(image8bit, None)
+            if des is None:
+                continue
             for d in des:
                 descriptors.append(d)
 
@@ -36,6 +38,8 @@ class SIFT():
             features = np.zeros(self.k)
             nkp = np.size(kp)
 
+            if des is None:
+                continue
             for d in des:
                 idx = self.kmeans.predict([d])  # get cluster index
                 features[idx] += 1 / nkp  # normalize histogram
